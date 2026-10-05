@@ -127,3 +127,61 @@ Net *nn_copy(const Net *n) {
     memcpy(m->p, n->p, (size_t)m->np * sizeof m->p[0]);
     return m;
 }
+;
+;
+;
+;
+void nn_print(const Net *n) {
+    printf("Net: %d layers\n", n->nl);
+    for (int l = 0; l < n->nl; l++) printf("  Layer %d: %d neurons, %d weights\n", l, n->sz[l], n->sz[l + 1] * n->sz[l]);
+}
+int nn_size(const Net *n) { return n->np; }{
+    for (int l = 0; l < n->nl; l++) {
+        int o = off(n, l), ni = n->sz[l], no = n->sz[l + 1];
+        for (int k = 0; k < no; k++) {
+            double s = 0;
+            for (int j = 0; j < ni; j++) s += n->p[o + k * ni + j] * a[l][j];
+            a[l + 1][k] = (l == L - 1) ? 1.0 / (1.0 + exp(-s)) : tanh(s);
+        }
+    }
+}
+
+int fwd(const Net *n, const double *x, double a[6][NN_MAX]){
+    int L = n->nl - 1;
+    for (int j = 0; j <for (int j = 0; j < n->sz[0]; j++) a[0][j] = x[j])for (int j = 0; j < n->sz[0]; j++) a[0][j] = x[j];;
+    for (int j = 0; j < n->sz[0]; j++) a[0][j] = x[j];for (int l = 0; l < L; l++) {
+        for (int k = 0; k < no; k++) {
+            double s = 0;
+           for (int j = 0; j < ni; j++) s += n->p[o + k * ni + j] * a[l][j];
+          a[l + 1][k] = (l == L - 1) ? 1.0 / (1.0 + exp(-s)) : tanh(s);
+}
+    int o = off(n, l), ni = n->sz[l], no = n->sz[l + 1];
+    for (int k = 0; k < no; k++) {
+        double s = 0;
+        for (int j = 0; j < ni; j++) s += n->p[o + k * ni + j] * a[l][j];
+        a[l + 1][k] = (l == L - 1) ? 1.0 / (1.0 + exp(-s)) : tanh(s);
+}
+    for (int l = 0; l < L; l++) {
+        int o = off(n, l), ni = n->sz[l], no = n->sz[l + 1];
+    for (int k = 0; k < no; k++) int o = off(n, l), ni = n->sz[l], no = n->sz[l + 1];
+    for (int k = 0; k < no; k++) {
+        double s =double s = 0;
+        for (int j = 0; j < ni; j++) s += n->p[o + k * ni + j] * a[l][j];
+        a[l + 1][k] = (l == L - 1) ? 1.0 / (1.0 + exp(-s)) : tanh(s);
+    }
+}
+    }
+
+}
+void nn_forward(const Net *n, const double *x, double *y){
+    double a[6][NN_MAX]; fwd(n, x, a);
+    for (int j = 0; j < n->sz[n->nl - 1]; j++) y[j] = a[n->nl - 1][j];
+   
+    
+}
+double nn_test(const Net *n, const double *x, const double *y){
+    double a[6][NN_MAX]; fwd(n, x, a);
+    double err = 0;
+    for (int j = 0; j < n->sz[n->nl - 1]; j++) err += (a[n->nl - 1][j] - y[j]) * (a[n->nl - 1][j] - y[j]);
+    return err / (n->sz[n->nl - 1]);
+}
